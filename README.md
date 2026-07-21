@@ -41,5 +41,3 @@ npm test
 - `public/`：正式图片、视频、Logo 和图标
 - `tests/`：服务端渲染测试
 - `worker/`：Vinext 的 Cloudflare Worker 入口
-
-正式网页视频使用 VP9 WebM，并以 H.264 MP4 作为兼容回退。视频母版、构建产物、缓存、本地环境变量和依赖目录均不包含在远程仓库中。
