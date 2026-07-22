@@ -58,7 +58,7 @@ test("renders the required semantic anchors and production contact details", asy
   assert.match(html, /src="\/wechat\.webp"/);
   assert.match(html, /深圳全域智能/);
   assert.match(html, /粤ICP备2026043468号-1/);
-  assert.doesNotMatch(html, /href="https:\/\/beian\.miit\.gov\.cn\//);
+  assert.match(html, /href="https:\/\/beian\.miit\.gov\.cn\//);
   assert.doesNotMatch(html, /扫码关注公众号或来信时/);
   assert.match(html, /name="botcheck"/);
   assert.doesNotMatch(html, /ICP_RECORD_NUMBER/);
