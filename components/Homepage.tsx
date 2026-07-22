@@ -189,14 +189,53 @@ function CountUp({ value, suffix = "+万" }: { value: number; suffix?: string })
 }
 
 function ResearchShowcase() {
-  const [activePaper, setActivePaper] = useState(0);
+  const [{ activePaper, previousPaper }, setPaperState] = useState<{ activePaper: number; previousPaper: number | null }>({
+    activePaper: 0,
+    previousPaper: null,
+  });
+  const paperPreloaders = useRef<HTMLImageElement[]>([]);
+
+  useEffect(() => {
+    paperPreloaders.current = papers.slice(1).flatMap((paper) =>
+      paper.images.map((image) => {
+        const preloader = new window.Image();
+        preloader.decoding = "async";
+        preloader.src = image.src;
+        void preloader.decode().catch(() => undefined);
+        return preloader;
+      }),
+    );
+
+    return () => {
+      paperPreloaders.current = [];
+    };
+  }, []);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActivePaper((current) => (current + 1) % papers.length);
+      setPaperState((current) => ({
+        activePaper: (current.activePaper + 1) % papers.length,
+        previousPaper: current.activePaper,
+      }));
     }, 3000);
     return () => window.clearInterval(timer);
   }, [activePaper]);
+
+  useEffect(() => {
+    if (previousPaper === null) return;
+    const timer = window.setTimeout(() => {
+      setPaperState((current) => current.previousPaper === previousPaper
+        ? { ...current, previousPaper: null }
+        : current);
+    }, 560);
+    return () => window.clearTimeout(timer);
+  }, [previousPaper]);
+
+  const showPaper = (nextPaper: number) => {
+    setPaperState((current) => nextPaper === current.activePaper
+      ? current
+      : { activePaper: nextPaper, previousPaper: current.activePaper });
+  };
 
   return (
     <section id="research" className="section section--research-showcase">
@@ -205,10 +244,18 @@ function ResearchShowcase() {
         <div className="research-showcase">
           <div className="paper-carousel" aria-roledescription="轮播" aria-label="公开论文">
             <div className="paper-carousel__viewport">
-              {papers.map((paper, index) => (
-                <article className={`paper-slide${index === activePaper ? " is-active" : ""}`} hidden={index !== activePaper} key={paper.url}>
+              {papers.map((paper, index) => {
+                const isActive = index === activePaper;
+                const isLeaving = index === previousPaper;
+                return (
+                <article
+                  className={`paper-slide${isActive ? " is-active" : ""}${isActive && previousPaper !== null ? " is-entering" : ""}${isLeaving ? " is-leaving" : ""}`}
+                  hidden={!isActive && !isLeaving}
+                  aria-hidden={!isActive}
+                  key={paper.url}
+                >
                   <div className="paper-slide__journal">{paper.journal}</div>
-                  <a href={paper.url} target="_blank" rel="noreferrer" aria-label={`查看论文：${paper.title}`}>
+                  <a href={paper.url} target="_blank" rel="noreferrer" aria-label={`查看论文：${paper.title}`} tabIndex={isActive ? undefined : -1}>
                     <div className={`paper-slide__image${paper.images.length > 1 ? " paper-slide__image--stacked" : ""}`}>
                       {paper.images.map((image, imageIndex) => (
                         <Image
@@ -218,6 +265,7 @@ function ResearchShowcase() {
                           width={image.width}
                           height={image.height}
                           sizes="(max-width: 860px) 100vw, 55vw"
+                          loading={index === 0 ? "eager" : "lazy"}
                           style={image.scale ? { width: `${image.scale * 100}%` } : undefined}
                           unoptimized
                           key={image.src}
@@ -227,7 +275,8 @@ function ResearchShowcase() {
                     <h3>{paper.title}</h3>
                   </a>
                 </article>
-              ))}
+                );
+              })}
             </div>
             <div className="paper-carousel__controls">
               <div className="paper-carousel__dots" aria-label="选择论文">
@@ -235,7 +284,7 @@ function ResearchShowcase() {
                   <button
                     type="button"
                     className={index === activePaper ? "is-active" : ""}
-                    onClick={() => setActivePaper(index)}
+                    onClick={() => showPaper(index)}
                     aria-label={`第 ${index + 1} 篇：${paper.title}`}
                     aria-current={index === activePaper ? "true" : undefined}
                     key={paper.url}

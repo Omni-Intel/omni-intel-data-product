@@ -125,8 +125,12 @@ a { color: inherit; text-decoration: none; }
 .section--research-showcase .section-heading { margin-bottom: 42px; }
 .research-showcase { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr); gap: 48px; align-items: start; }
 .paper-carousel { min-width: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-.paper-carousel__viewport { min-height: 480px; }
-.paper-slide[hidden] { display: none; }
+.paper-carousel__viewport { min-height: 480px; display: grid; }
+.paper-slide { grid-area: 1 / 1; min-width: 0; opacity: 0; visibility: hidden; pointer-events: none; }
+.paper-slide.is-leaving { z-index: 1; opacity: 1; visibility: visible; }
+.paper-slide.is-active { z-index: 2; opacity: 1; visibility: visible; pointer-events: auto; }
+.paper-slide.is-entering { animation: paper-slide-reveal 560ms cubic-bezier(.22, .72, .24, 1) both; }
+.paper-slide[hidden] { display: block; }
 .paper-slide__journal { margin-bottom: 18px; color: var(--color-accent); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .paper-slide__image { position: relative; aspect-ratio: 16 / 9; display: grid; place-items: center; overflow: hidden; background: #fff; }
 .paper-slide__image img { position: absolute; top: 50%; left: 50%; display: block; object-fit: fill; transform: translate(-50%, -50%); }
@@ -140,6 +144,13 @@ a { color: inherit; text-decoration: none; }
 .paper-carousel__dots { display: flex; align-items: center; gap: 8px; }
 .paper-carousel__dots button { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: var(--color-border-strong); cursor: pointer; transition: width 180ms ease, border-radius 180ms ease, background 180ms ease; }
 .paper-carousel__dots button.is-active { width: 24px; border-radius: 5px; background: var(--color-accent); }
+@keyframes paper-slide-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .paper-slide.is-entering { animation: none; }
+}
 .research-datasets { min-width: 0; padding: 36px; border-radius: 22px; background: var(--color-text-primary); color: var(--color-surface); }
 .research-datasets__source { color: var(--color-accent-light); font-size: 10px; font-weight: 700; letter-spacing: .15em; }
 .research-datasets__summary { margin-top: 44px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
