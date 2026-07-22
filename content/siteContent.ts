@@ -9,6 +9,7 @@ export const siteContent = {
   },
   contact: {
     email: "sales@omni-intel.cn",
+    officialAccount: "深圳全域智能",
   },
 } as const;
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { OrderPanel } from "@/components/OrderPanel";
 import { ViewportVideo } from "@/components/ViewportVideo";
@@ -12,8 +12,8 @@ import { siteContent } from "@/content/siteContent";
 
 const navItems = [
   { id: "services", href: "#services", label: "服务能力" },
-  { href: "/products/neural-data", label: "产品中心" },
-  { href: "/papers", label: "研究成果" },
+  { id: "research", href: "#research", label: "研究成果" },
+  { href: "/products/neural-data", label: "数采中心" },
 ] as const;
 
 function SectionHeader({ title, description }: { title: string; description: string }) {
@@ -39,22 +39,6 @@ function Hero({ onBook }: { onBook: () => void }) {
           <button type="button" className="button button--primary hero__button" onClick={onBook}>预约体验</button>
         </div>
         <div className="hero__space" aria-hidden="true" />
-      </div>
-    </section>
-  );
-}
-
-function DatasetProof() {
-  return (
-    <section id="dataset-proof" className="dataset-proof" aria-label="汉脑交响数据集下载情况">
-      <div className="container dataset-proof__inner">
-        <span className="dataset-proof__source">SCIENCE DATA BANK</span>
-        <p>
-          数据集社区
-          <a href={datasetCollection.url} target="_blank" rel="noreferrer">汉脑交响</a>
-          已被下载 <strong>{datasetCollection.downloads}</strong> 次
-        </p>
-        <Link className="text-link" href="/papers#datasets">了解更多</Link>
       </div>
     </section>
   );
@@ -107,7 +91,7 @@ function Services() {
             </div>
           </Link>
         </div>
-        <Link className="section-more" href="/products/neural-data">查看产品</Link>
+        <Link className="section-more" href="/products/neural-data">查看更多</Link>
       </div>
     </section>
   );
@@ -170,22 +154,120 @@ function Applications() {
   );
 }
 
-function ResearchPreview() {
-  const paper = papers[0];
+function CountUp({ value, suffix = "+万" }: { value: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let frame = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      if (reduceMotion) {
+        setCount(value);
+        return;
+      }
+      const startedAt = performance.now();
+      const tick = (now: number) => {
+        const progress = Math.min((now - startedAt) / 1200, 1);
+        setCount(Math.round(value * (1 - Math.pow(1 - progress, 3))));
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    }, { threshold: 0.35 });
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [value]);
+
+  return <span ref={ref} data-count-target={value}>{count}{suffix}</span>;
+}
+
+function ResearchShowcase() {
+  const [activePaper, setActivePaper] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActivePaper((current) => (current + 1) % papers.length);
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [activePaper]);
+
   return (
-    <div className="research-preview">
-      <div className="research-preview__table" aria-label="研究成果论文预览">
-        <div className="papers-list__head" aria-hidden="true">
-          <span>Year</span><span>Paper</span><span>Author(s)</span><span />
-        </div>
-        <div className="papers-row">
-          <span className="paper-row__year">{paper.year}</span>
-          <strong>{paper.title}</strong>
-          <span className="paper-row__authors">{paper.authors}</span>
-          <Link className="research-more research-more--row" href="/papers">查看更多</Link>
+    <section id="research" className="section section--research-showcase">
+      <div className="container">
+        <SectionHeader {...siteContent.research} />
+        <div className="research-showcase">
+          <div className="paper-carousel" aria-roledescription="轮播" aria-label="公开论文">
+            <div className="paper-carousel__viewport">
+              {papers.map((paper, index) => (
+                <article className={`paper-slide${index === activePaper ? " is-active" : ""}`} hidden={index !== activePaper} key={paper.url}>
+                  <div className="paper-slide__journal">{paper.journal}</div>
+                  <a href={paper.url} target="_blank" rel="noreferrer" aria-label={`查看论文：${paper.title}`}>
+                    <div className={`paper-slide__image${paper.images.length > 1 ? " paper-slide__image--stacked" : ""}`}>
+                      {paper.images.map((image, imageIndex) => (
+                        <Image
+                          src={image.src}
+                          alt={`${paper.title} 论文配图${paper.images.length > 1 ? ` ${imageIndex + 1}` : ""}`}
+                          className={`paper-slide__asset paper-slide__asset--fit-${image.fit}`}
+                          width={image.width}
+                          height={image.height}
+                          sizes="(max-width: 860px) 100vw, 55vw"
+                          style={image.scale ? { width: `${image.scale * 100}%` } : undefined}
+                          unoptimized
+                          key={image.src}
+                        />
+                      ))}
+                    </div>
+                    <h3>{paper.title}</h3>
+                  </a>
+                </article>
+              ))}
+            </div>
+            <div className="paper-carousel__controls">
+              <div className="paper-carousel__dots" aria-label="选择论文">
+                {papers.map((paper, index) => (
+                  <button
+                    type="button"
+                    className={index === activePaper ? "is-active" : ""}
+                    onClick={() => setActivePaper(index)}
+                    aria-label={`第 ${index + 1} 篇：${paper.title}`}
+                    aria-current={index === activePaper ? "true" : undefined}
+                    key={paper.url}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <aside className="research-datasets" aria-label="汉脑交响数据集下载情况">
+            <span className="research-datasets__source">SCIENCE DATA BANK</span>
+            <div className="research-datasets__summary">
+              <div>
+                <p className="research-datasets__eyebrow">数据集社区</p>
+                <a className="research-datasets__title" href={datasetCollection.url} target="_blank" rel="noreferrer">{datasetCollection.name}</a>
+              </div>
+              <div className="research-datasets__total">
+                <CountUp value={Number.parseInt(datasetCollection.downloads, 10)} /><small>次下载</small>
+              </div>
+            </div>
+            <div className="research-datasets__list">
+              {datasetCollection.datasets.map((dataset) => (
+                <a href={dataset.url} target="_blank" rel="noreferrer" key={dataset.name}>
+                  <span>{dataset.name}</span>
+                  <strong><CountUp value={Number.parseInt(dataset.downloads, 10)} suffix="+万次下载" /></strong>
+                </a>
+              ))}
+            </div>
+          </aside>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -222,14 +304,7 @@ export default function Homepage() {
         <Capabilities />
         <DataTypes />
 
-        <section className="section section--applications section--research-content">
-          <div className="container">
-            <SectionHeader {...siteContent.research} />
-            <ResearchPreview />
-          </div>
-        </section>
-
-        <DatasetProof />
+        <ResearchShowcase />
         <Applications />
 
         <section id="order" className="section section--order">
@@ -244,6 +319,7 @@ export default function Homepage() {
       <footer className="site-footer">
         <div className="container site-footer__inner">
           <span>© {new Date().getFullYear()} 全域智能 / Omni-Intelligence</span>
+          <span>粤ICP备2026043468号-1</span>
         </div>
       </footer>
       <OrderPanel open={drawerOpen} onClose={() => setDrawerOpen(false)} />

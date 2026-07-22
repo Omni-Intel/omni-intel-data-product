@@ -69,7 +69,7 @@ export default function NeuralDataProductPage() {
         <section className="section section--order">
           <div className="container order-cta">
             <h2>从一项真实任务开始设计采集方案</h2>
-            <p>告诉我们目标、场景、数据模态与预计规模</p>
+            <p>告诉我们目标、场景与需要采集的数据模态</p>
             <ProductContact />
           </div>
         </section>

@@ -4,6 +4,13 @@ export const datasetCollection = {
   downloads: "27+万",
   datasets: [
     {
+      name: "EmoEEG-MC",
+      description: "多情境情绪脑电数据集",
+      year: "2025",
+      downloads: "15+万",
+      url: "https://www.scidb.cn/detail?dataSetId=9b182864c9604255a0433d1edae88f0b&version=V6&code=o00147",
+    },
+    {
       name: "ChineseEEG",
       description: "面向语义对齐与神经解码的中文语料脑电数据集",
       year: "2024",

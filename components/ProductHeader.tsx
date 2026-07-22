@@ -19,8 +19,8 @@ export function ProductHeader() {
           <Link className="wordmark" href="/" aria-label="返回首页"><BrandLogo /></Link>
           <nav className="site-nav" aria-label="主导航">
             <Link href="/#services">服务能力</Link>
-            <Link className="is-active" href="/products/neural-data">产品中心</Link>
-            <Link href="/papers">研究成果</Link>
+            <Link href="/#research">研究成果</Link>
+            <Link className="is-active" href="/products/neural-data">数采中心</Link>
           </nav>
           <button type="button" className="button button--primary header-order" onClick={() => setDrawerOpen(true)}>联系我们</button>
         </div>
