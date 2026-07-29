@@ -26,15 +26,15 @@ export default function NeuralDataProductPage() {
           </div>
         </section>
 
-        <section className="product-overview">
+        <section className="product-overview" data-motion-section>
           <div className="container product-overview__inner">
-            <p>围绕研究问题、模型任务或交互场景，组织范式设计与验证、设备接入、多模态同步、在线质控、数据处理、标注与结构化交付。既支持现有范式执行，也可根据目标人群、任务上下文和下游验证要求定制数据方案。</p>
+            <p data-reveal="copy" data-reveal-delay="180">围绕研究问题、模型任务或交互场景，组织范式设计与验证、设备接入、多模态同步、在线质控、数据处理、标注与结构化交付。既支持现有范式执行，也可根据目标人群、任务上下文和下游验证要求定制数据方案。</p>
           </div>
         </section>
 
-        <section id="eeg" className="product-media-section">
+        <section id="eeg" className="product-media-section" data-motion-section>
           <div className="container product-media-row">
-            <div className="product-media-row__visual product-media-row__visual--image">
+            <div className="product-media-row__visual product-media-row__visual--image" data-reveal="media" data-reveal-delay="0">
               <Image
                 className="collection-media__image"
                 src="/eeg-collection.webp"
@@ -46,32 +46,32 @@ export default function NeuralDataProductPage() {
                 style={{ objectFit: "cover", objectPosition: "center" }}
               />
             </div>
-            <div><h2>脑电数据采集流程示例</h2><p>面向阅读、视听刺激与交互任务，完成脑电设备配置、实验范式运行、事件标记、多模态同步与信号质量检查。</p></div>
+            <div><h2 data-reveal="title">脑电数据采集流程示例</h2><p data-reveal="copy" data-reveal-delay="180">面向阅读、视听刺激与交互任务，完成脑电设备配置、实验范式运行、事件标记、多模态同步与信号质量检查。</p></div>
           </div>
         </section>
 
-        <section id="emg" className="product-media-section product-media-section--reverse">
+        <section id="emg" className="product-media-section product-media-section--reverse" data-motion-section>
           <div className="container product-media-row">
-            <div className="product-media-row__visual product-media-row__visual--video">
+            <div className="product-media-row__visual product-media-row__visual--video" data-reveal="media" data-reveal-delay="0">
               <ViewportVideo className="collection-media__video" controls label="肌电数据采集流程视频" />
             </div>
-            <div><h2>肌电数据采集流程示例</h2><p>同步记录肌电、人体动作、操作过程与环境信息，观察任务执行中的身体响应，并与神经信号、行为事件和场景上下文对齐。</p></div>
+            <div><h2 data-reveal="title">肌电数据采集流程示例</h2><p data-reveal="copy" data-reveal-delay="180">同步记录肌电、人体动作、操作过程与环境信息，观察任务执行中的身体响应，并与神经信号、行为事件和场景上下文对齐。</p></div>
           </div>
         </section>
 
-        <section className="section section--capabilities">
+        <section className="section section--capabilities" data-motion-section>
           <div className="container">
-            <header className="section-heading"><h2>服务流程</h2></header>
+            <header className="section-heading"><h2 data-reveal="title">服务流程</h2></header>
             <div className="editorial-list">
-              {workflow.map((item, index) => <article className="editorial-row" key={item.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{item.title}</h3><p>{item.description}</p></article>)}
+              {workflow.map((item, index) => <article className="editorial-row" data-reveal="fast-copy" data-reveal-delay={String(180 + index * 70)} key={item.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{item.title}</h3><p>{item.description}</p></article>)}
             </div>
           </div>
         </section>
 
-        <section className="section section--order">
+        <section className="section section--order" data-motion-section>
           <div className="container order-cta">
-            <h2>{siteContent.order.title}</h2>
-            <ProductContact />
+            <h2 data-reveal="title">{siteContent.order.title}</h2>
+            <div data-reveal="copy" data-reveal-delay="180"><ProductContact /></div>
           </div>
         </section>
       </main>

@@ -20,7 +20,7 @@ const navItems = [
 function SectionHeader({ title, description }: { title: string; description?: string }) {
   return (
     <header className="section-heading">
-      <h2>{title}</h2>
+      <h2 data-reveal="title">{title}</h2>
       {description ? <p>{description}</p> : null}
     </header>
   );
@@ -31,7 +31,10 @@ function Hero({ onBook }: { onBook: () => void }) {
     <section id="top" className="hero">
       <div className="container hero__inner">
         <div className="hero__copy">
-          <h1>定义以人为中心的神经信号数采新范式</h1>
+          <h1>
+            <span>定义以人为中心的</span>
+            <span>神经信号数采新范式</span>
+          </h1>
           <button type="button" className="button button--primary hero__button" onClick={onBook}>预约体验</button>
         </div>
         <div className="hero__space" aria-hidden="true" />
@@ -42,11 +45,13 @@ function Hero({ onBook }: { onBook: () => void }) {
 
 function Narrative() {
   return (
-    <section className="section section--narrative">
+    <section className="section section--narrative" data-motion-section>
       <div className="container narrative">
-        <h2>{serviceContent.narrative.title}</h2>
+        <h2 data-reveal="title">{serviceContent.narrative.title}</h2>
         <div className="narrative__body">
-          {serviceContent.narrative.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          {serviceContent.narrative.paragraphs.map((paragraph, index) => (
+            <p data-reveal="copy" data-reveal-delay={String(180 + index * 70)} key={paragraph}>{paragraph}</p>
+          ))}
         </div>
       </div>
     </section>
@@ -55,12 +60,12 @@ function Narrative() {
 
 function Services() {
   return (
-    <section id="services" className="section section--services">
+    <section id="services" className="section section--services" data-motion-section>
       <div className="container">
         <SectionHeader title="我们可以提供" />
         <div className="service-media-grid">
           <Link className="service-media" href="/products/neural-data#eeg">
-            <div className="service-media__visual service-media__visual--image">
+            <div className="service-media__visual service-media__visual--image" data-reveal="media" data-reveal-delay="0">
               <Image
                 className="collection-media__image"
                 src="/eeg-collection.webp"
@@ -72,20 +77,20 @@ function Services() {
                 style={{ objectFit: "cover", objectPosition: "center" }}
               />
             </div>
-            <div className="service-media__copy">
+            <div className="service-media__copy" data-reveal="copy" data-reveal-delay="180">
               <h3>脑电数据采集流程示例</h3>
             </div>
           </Link>
           <Link className="service-media" href="/products/neural-data#emg">
-            <div className="service-media__visual service-media__visual--video">
+            <div className="service-media__visual service-media__visual--video" data-reveal="media" data-reveal-delay="0">
               <ViewportVideo className="collection-media__video" label="肌电数据采集流程视频" />
             </div>
-            <div className="service-media__copy">
+            <div className="service-media__copy" data-reveal="copy" data-reveal-delay="250">
               <h3>肌电数据采集流程示例</h3>
             </div>
           </Link>
         </div>
-        <Link className="section-more" href="/products/neural-data">查看更多</Link>
+        <Link className="section-more" href="/products/neural-data" data-reveal="copy" data-reveal-delay="320">查看更多</Link>
       </div>
     </section>
   );
@@ -93,12 +98,12 @@ function Services() {
 
 function DataTypes() {
   return (
-    <section className="section section--data-types">
+    <section className="section section--data-types" data-motion-section>
       <div className="container">
         <SectionHeader title="多模态数据体系" />
         <div className="data-type-grid">
-          {serviceContent.dataTypes.map((item) => (
-            <article key={item.title}>
+          {serviceContent.dataTypes.map((item, index) => (
+            <article data-reveal="copy" data-reveal-delay={String(180 + index * 70)} key={item.title}>
               <h3>{item.title}</h3>
               <p>{item.items.join(" / ")}</p>
             </article>
@@ -111,12 +116,12 @@ function DataTypes() {
 
 function Applications() {
   return (
-    <section className="section section--research section--applications-content">
+    <section className="section section--research section--applications-content" data-motion-section>
       <div className="container">
         <SectionHeader title="应用方向" />
         <div className="application-cards">
-          {serviceContent.applications.map((item) => (
-            <article className="application-card" key={item.title}>
+          {serviceContent.applications.map((item, index) => (
+            <article className="application-card" data-reveal="copy" data-reveal-delay={String(180 + index * 70)} key={item.title}>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
               <p className="application-card__uses">{item.uses.join(" · ")}</p>
@@ -212,11 +217,11 @@ function ResearchShowcase() {
   };
 
   return (
-    <section id="research" className="section section--research-showcase">
+    <section id="research" className="section section--research-showcase" data-motion-section="technical">
       <div className="container">
         <SectionHeader title={siteContent.research.title} />
         <div className="research-showcase">
-          <div className="paper-carousel" aria-roledescription="轮播" aria-label="公开论文">
+          <div className="paper-carousel" aria-roledescription="轮播" aria-label="公开论文" data-reveal="media" data-reveal-delay="0">
             <div className="paper-carousel__viewport">
               {papers.map((paper, index) => {
                 const isActive = index === activePaper;
@@ -268,7 +273,7 @@ function ResearchShowcase() {
             </div>
           </div>
 
-          <aside className="research-datasets" aria-label="汉脑交响数据集下载情况">
+          <aside className="research-datasets" aria-label="汉脑交响数据集下载情况" data-reveal="copy" data-reveal-delay="180">
             <span className="research-datasets__source">SCIENCE DATA BANK</span>
             <div className="research-datasets__summary">
               <div>
@@ -301,6 +306,7 @@ export default function Homepage() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -329,10 +335,10 @@ export default function Homepage() {
         <ResearchShowcase />
         <Applications />
 
-        <section id="order" className="section section--order">
+        <section id="order" className="section section--order" data-motion-section>
           <div className="container order-cta">
-            <h2>{siteContent.order.title}</h2>
-            <button className="button button--primary" type="button" onClick={openOrder}>联系我们</button>
+            <h2 data-reveal="title">{siteContent.order.title}</h2>
+            <button className="button button--primary" type="button" onClick={openOrder} data-reveal="copy" data-reveal-delay="180">联系我们</button>
           </div>
         </section>
       </main>

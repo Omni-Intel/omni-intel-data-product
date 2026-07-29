@@ -16,7 +16,7 @@ test("server-renders the neural multimodal data service homepage", async () => {
   const html = await response.text();
   assert.match(html, /<html lang="zh-CN">/);
   assert.match(html, /<title>全域智能｜神经多模态数据服务<\/title>/);
-  assert.match(html, /<h1>定义以人为中心的神经信号数采新范式<\/h1>/);
+  assert.match(html, /<h1><span>定义以人为中心的<\/span><span>神经信号数采新范式<\/span><\/h1>/);
   assert.match(html, /预约体验/);
   assert.match(html, /以规模化大脑数采和大脑基座模型为核心，帮助下一代AI理解人类的价值判断、内在状态与个体偏好/);
   assert.match(html, /通过采集和解析脑电等神经信号，将人的注意、意图、情绪、疲劳和错误感知转化为AI可使用的信息。/);
@@ -60,7 +60,11 @@ test("server-renders the neural multimodal data service homepage", async () => {
   assert.doesNotMatch(html, /神经信号解析与标注/);
   assert.doesNotMatch(html, /神经信号处理与标注/);
   assert.doesNotMatch(html, /规模化数据服务/);
-  assert.ok(html.indexOf("<h2>研究成果</h2>") < html.indexOf("<h2>应用方向</h2>"));
+  assert.ok(html.indexOf('data-reveal="title">研究成果</h2>') < html.indexOf('data-reveal="title">应用方向</h2>'));
+  assert.match(html, /data-motion-section="technical"/);
+  assert.match(html, /data-reveal-delay="180"/);
+  assert.match(html, /data-reveal="media"/);
+  assert.match(html, /data-reveal-delay="0"/);
   assert.match(html, /脑电数据采集流程示例/);
   assert.match(html, /肌电数据采集流程示例/);
   assert.doesNotMatch(html, /以真实采集设备、实验平台和规范流程/);
@@ -148,6 +152,7 @@ test("renders the dedicated neural data product page", async () => {
   assert.match(html, /id="eeg"/);
   assert.match(html, /id="emg"/);
   assert.match(html, /服务流程/);
+  assert.match(html, /data-reveal="fast-copy"/);
   assert.doesNotMatch(html, /从需求澄清到结构化数据交付，每一步都保留明确的输入、执行与验证记录/);
   assert.match(html, /当所有人都在造更快的 AI，我们在造更懂人的 AI。/);
   assert.doesNotMatch(html, /从一项真实任务开始设计采集方案/);

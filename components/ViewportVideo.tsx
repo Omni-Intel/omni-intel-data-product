@@ -62,6 +62,7 @@ export function ViewportVideo({ className, controls = false, label }: ViewportVi
       className={className}
       aria-label={label}
       controls={controls}
+      loop
       muted
       playsInline
       preload="none"
