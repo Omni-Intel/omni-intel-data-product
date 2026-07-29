@@ -59,7 +59,7 @@ export default function NeuralDataProductPage() {
 
         <section className="section section--capabilities">
           <div className="container">
-            <header className="section-heading"><h2>服务流程</h2><p>从需求澄清到结构化数据交付，每一步都保留明确的输入、执行与验证记录。</p></header>
+            <header className="section-heading"><h2>服务流程</h2><p>从需求澄清到结构化数据交付，每一步都保留明确的输入、执行与验证记录</p></header>
             <div className="editorial-list">
               {workflow.map((item, index) => <article className="editorial-row" key={item.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{item.title}</h3><p>{item.description}</p></article>)}
             </div>

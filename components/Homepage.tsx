@@ -101,7 +101,7 @@ function Capabilities() {
   return (
     <section className="section section--capabilities">
       <div className="container">
-        <SectionHeader title="核心能力" description="围绕神经信号建立可执行、可同步、可解析、可规模化的完整数据服务。" />
+        <SectionHeader title="核心能力" description="围绕神经信号建立可执行、可同步、可解析、可规模化的完整数据服务" />
         <div className="capability-cards">
           {serviceContent.capabilities.map((item, index) => (
             <article className="capability-card" key={item.title}>
@@ -120,7 +120,7 @@ function DataTypes() {
   return (
     <section className="section section--data-types">
       <div className="container">
-        <SectionHeader title="多模态数据结构" description="不只记录单一信号，而是将神经、生理、行为、任务与环境信息组织为可对齐的数据体系。" />
+        <SectionHeader title="多模态数据结构" description="不只记录单一信号，而是将神经、生理、行为、任务与环境信息组织为可对齐的数据体系" />
         <div className="data-type-grid">
           {serviceContent.dataTypes.map((item) => (
             <article key={item.title}>
@@ -138,7 +138,7 @@ function Applications() {
   return (
     <section className="section section--research section--applications-content">
       <div className="container">
-        <SectionHeader title="面向真实应用" description="从研究问题出发，也面向需要理解人的人工智能系统与真实业务场景。" />
+        <SectionHeader title="面向真实应用" description="从研究问题出发，也面向需要理解人的人工智能系统与真实业务场景" />
         <div className="application-cards">
           {serviceContent.applications.map((item, index) => (
             <article className="application-card" key={item.title}>
