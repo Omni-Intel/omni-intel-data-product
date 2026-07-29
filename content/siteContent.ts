@@ -4,7 +4,7 @@ export const siteContent = {
     description: "以公开论文和数据集记录实验方法、数据规模与可复现结果",
   },
   order: {
-    title: "把复杂的采集需求交给可靠的技术体系",
+    title: "当所有人都在造更快的 AI，我们在造更懂人的 AI。",
     description: "从研究设计到标准化数据交付",
   },
   contact: {

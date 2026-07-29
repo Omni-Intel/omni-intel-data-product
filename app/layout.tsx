@@ -5,19 +5,19 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "全域智能｜神经数据采集与实验范式服务",
-  description: "面向科研团队、大模型与具身智能客户，提供实验范式执行、范式调整、定制设计及多模态神经数据采集服务。",
+  title: "全域智能｜神经多模态数据服务",
+  description: "面向大脑基座模型、科学研究与智能体交互，提供神经多模态数据采集、处理、标注与结构化交付服务。",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "zh_CN",
-    title: "全域智能｜神经数据采集与实验范式服务",
-    description: "从实验设置到可验证的数据结果，为科研与模型团队提供神经数据采集服务。",
+    title: "全域智能｜神经多模态数据服务",
+    description: "从范式设计、多模态采集到处理标注与结构化交付，为科研与模型团队提供可验证的数据基础。",
   },
   twitter: {
     card: "summary_large_image",
-    title: "全域智能｜神经数据采集与实验范式服务",
-    description: "从实验设置到可验证的数据结果。",
+    title: "全域智能｜神经多模态数据服务",
+    description: "神经多模态数据采集、处理、标注与结构化交付。",
   },
 };
 

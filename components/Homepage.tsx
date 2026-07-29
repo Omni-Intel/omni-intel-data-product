@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { OrderPanel } from "@/components/OrderPanel";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ViewportVideo } from "@/components/ViewportVideo";
 import { papers } from "@/content/papers";
 import { serviceContent, datasetCollection } from "@/content/serviceContent";
@@ -16,11 +17,11 @@ const navItems = [
   { href: "/products/neural-data", label: "数采中心" },
 ] as const;
 
-function SectionHeader({ title, description }: { title: string; description: string }) {
+function SectionHeader({ title, description }: { title: string; description?: string }) {
   return (
     <header className="section-heading">
       <h2>{title}</h2>
-      <p>{description}</p>
+      {description ? <p>{description}</p> : null}
     </header>
   );
 }
@@ -30,12 +31,7 @@ function Hero({ onBook }: { onBook: () => void }) {
     <section id="top" className="hero">
       <div className="container hero__inner">
         <div className="hero__copy">
-          <h1>
-            <span>采集人的真实反应</span>
-            <span>为智能提供新的理解维度</span>
-          </h1>
-          <p className="hero__lead">{serviceContent.lead}</p>
-          <p className="hero__support">我们记录人看到了什么、做了什么，也进一步探索人在感知、判断和行动过程中的真实反应。</p>
+          <h1>定义以人为中心的神经信号数采新范式</h1>
           <button type="button" className="button button--primary hero__button" onClick={onBook}>预约体验</button>
         </div>
         <div className="hero__space" aria-hidden="true" />
@@ -61,7 +57,7 @@ function Services() {
   return (
     <section id="services" className="section section--services">
       <div className="container">
-        <SectionHeader title="我们可以提供" description="真实采集设备、实验范式、多模态数据结构与技术验证" />
+        <SectionHeader title="我们可以提供" />
         <div className="service-media-grid">
           <Link className="service-media" href="/products/neural-data#eeg">
             <div className="service-media__visual service-media__visual--image">
@@ -78,7 +74,6 @@ function Services() {
             </div>
             <div className="service-media__copy">
               <h3>脑电数据采集流程示例</h3>
-              <p>以真实采集设备、实验平台和规范流程，完成脑电及眼动、行为等模态的同步采集。</p>
             </div>
           </Link>
           <Link className="service-media" href="/products/neural-data#emg">
@@ -87,7 +82,6 @@ function Services() {
             </div>
             <div className="service-media__copy">
               <h3>肌电数据采集流程示例</h3>
-              <p>通过设备、平台与任务流程协同，记录肌电、动作和环境信息，并建立统一时间基准。</p>
             </div>
           </Link>
         </div>
@@ -97,30 +91,11 @@ function Services() {
   );
 }
 
-function Capabilities() {
-  return (
-    <section className="section section--capabilities">
-      <div className="container">
-        <SectionHeader title="核心能力" description="围绕神经信号建立可执行、可同步、可解析、可规模化的完整数据服务" />
-        <div className="capability-cards">
-          {serviceContent.capabilities.map((item, index) => (
-            <article className="capability-card" key={item.title}>
-              <span>能力 {String(index + 1).padStart(2, "0")}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function DataTypes() {
   return (
     <section className="section section--data-types">
       <div className="container">
-        <SectionHeader title="多模态数据结构" description="不只记录单一信号，而是将神经、生理、行为、任务与环境信息组织为可对齐的数据体系" />
+        <SectionHeader title="多模态数据体系" />
         <div className="data-type-grid">
           {serviceContent.dataTypes.map((item) => (
             <article key={item.title}>
@@ -138,11 +113,10 @@ function Applications() {
   return (
     <section className="section section--research section--applications-content">
       <div className="container">
-        <SectionHeader title="面向真实应用" description="从研究问题出发，也面向需要理解人的人工智能系统与真实业务场景" />
+        <SectionHeader title="应用方向" />
         <div className="application-cards">
-          {serviceContent.applications.map((item, index) => (
+          {serviceContent.applications.map((item) => (
             <article className="application-card" key={item.title}>
-              <span>场景 {String(index + 1).padStart(2, "0")}</span>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
               <p className="application-card__uses">{item.uses.join(" · ")}</p>
@@ -240,7 +214,7 @@ function ResearchShowcase() {
   return (
     <section id="research" className="section section--research-showcase">
       <div className="container">
-        <SectionHeader {...siteContent.research} />
+        <SectionHeader title={siteContent.research.title} />
         <div className="research-showcase">
           <div className="paper-carousel" aria-roledescription="轮播" aria-label="公开论文">
             <div className="paper-carousel__viewport">
@@ -350,7 +324,6 @@ export default function Homepage() {
         <Hero onBook={openOrder} />
         <Narrative />
         <Services />
-        <Capabilities />
         <DataTypes />
 
         <ResearchShowcase />
@@ -359,25 +332,12 @@ export default function Homepage() {
         <section id="order" className="section section--order">
           <div className="container order-cta">
             <h2>{siteContent.order.title}</h2>
-            <p>{siteContent.order.description}</p>
             <button className="button button--primary" type="button" onClick={openOrder}>联系我们</button>
           </div>
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container site-footer__inner">
-          <span>© {new Date().getFullYear()} 全域智能 / Omni-Intelligence</span>
-          <a
-            className="site-footer__filing"
-            href="https://beian.miit.gov.cn/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            粤ICP备2026043468号-1
-          </a>
-        </div>
-      </footer>
+      <SiteFooter />
       <OrderPanel open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </>
   );
