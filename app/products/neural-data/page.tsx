@@ -1,10 +1,8 @@
 import Image from "next/image";
-import { ProductContact } from "@/components/ProductContact";
 import { ProductHeader } from "@/components/ProductHeader";
-import { SiteFooter } from "@/components/SiteFooter";
+import { SiteBottom } from "@/components/SiteBottom";
 import { ViewportVideo } from "@/components/ViewportVideo";
 import { serviceContent } from "@/content/serviceContent";
-import { siteContent } from "@/content/siteContent";
 
 const workflow = [
   { title: "需求澄清与数据设计", description: "明确研究问题、模型任务或交互场景，确定被试范围、数据模态、任务上下文、标注体系、质量标准与交付结构。" },
@@ -68,14 +66,8 @@ export default function NeuralDataProductPage() {
           </div>
         </section>
 
-        <section className="section section--order" data-motion-section>
-          <div className="container order-cta">
-            <h2 data-reveal="title">{siteContent.order.title}</h2>
-            <div data-reveal="copy" data-reveal-delay="180"><ProductContact /></div>
-          </div>
-        </section>
       </main>
-      <SiteFooter />
+      <SiteBottom />
     </div>
   );
 }

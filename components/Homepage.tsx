@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { OrderPanel } from "@/components/OrderPanel";
-import { SiteFooter } from "@/components/SiteFooter";
+import { SiteBottom } from "@/components/SiteBottom";
 import { ViewportVideo } from "@/components/ViewportVideo";
 import { papers } from "@/content/papers";
 import { serviceContent, datasetCollection } from "@/content/serviceContent";
@@ -337,15 +337,9 @@ export default function Homepage() {
         <ResearchShowcase />
         <Applications />
 
-        <section id="order" className="section section--order" data-motion-section>
-          <div className="container order-cta">
-            <h2 data-reveal="title">{siteContent.order.title}</h2>
-            <button className="button button--primary" type="button" onClick={openOrder} data-reveal="copy" data-reveal-delay="180">联系我们</button>
-          </div>
-        </section>
       </main>
 
-      <SiteFooter />
+      <SiteBottom onContact={openOrder} />
       <OrderPanel open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </>
   );
