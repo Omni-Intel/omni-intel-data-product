@@ -21,7 +21,7 @@ test("server-renders the neural multimodal data service homepage", async () => {
   assert.match(html, /以规模化大脑数采和大脑基座模型为核心，帮助下一代AI理解人类的价值判断、内在状态与个体偏好/);
   assert.match(html, /通过采集和解析脑电等神经信号，将人的注意、意图、情绪、疲劳和错误感知转化为AI可使用的信息。/);
   assert.match(html, /让AI在训练阶段学习人的判断与偏好，在使用过程中持续理解人的状态并作出响应。/);
-  assert.match(html, /在数据层上提供包括采集、去噪（EEGdenoiseNet）、脑电溯源（Nature BME）、大脑的数字孪生（Nature Methods）在内的全链路技术。/);
+  assert.match(html, /在数据层上提供包括采集、去噪、脑电溯源、大脑的数字孪生在内的全链路技术。/);
   assert.match(html, /当所有人都在造更快的 AI，我们在造更懂人的 AI。/);
   assert.doesNotMatch(html, /从研究设计到标准化数据交付/);
   assert.doesNotMatch(html, /真实采集设备、实验范式、多模态数据结构与技术验证/);

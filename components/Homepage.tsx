@@ -17,6 +17,8 @@ const navItems = [
   { href: "/products/neural-data", label: "数采中心" },
 ] as const;
 
+const PAPER_TRANSITION_DURATION = 460;
+
 function SectionHeader({ title, description }: { title: string; description?: string }) {
   return (
     <header className="section-heading">
@@ -206,7 +208,7 @@ function ResearchShowcase() {
       setPaperState((current) => current.previousPaper === previousPaper
         ? { ...current, previousPaper: null }
         : current);
-    }, 560);
+    }, PAPER_TRANSITION_DURATION);
     return () => window.clearTimeout(timer);
   }, [previousPaper]);
 
