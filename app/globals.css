@@ -589,7 +589,7 @@ a { color: inherit; text-decoration: none; }
     animation: hero-enter 1000ms var(--motion-ease) 80ms both;
   }
   .product-hero p {
-    animation: copy-unfold 1000ms var(--reveal-ease) 280ms both;
+    animation: copy-unfold 500ms var(--reveal-ease) 280ms both;
   }
   .hero__button {
     animation: hero-enter 1000ms var(--motion-ease) 480ms both;
@@ -602,10 +602,10 @@ a { color: inherit; text-decoration: none; }
     animation: title-rise 1000ms var(--reveal-ease) var(--reveal-delay, 0ms) both;
   }
   [data-motion-section].is-revealed [data-reveal="copy"] {
-    animation: copy-unfold 1000ms var(--reveal-ease) var(--reveal-delay, 180ms) both;
+    animation: copy-unfold 500ms var(--reveal-ease) var(--reveal-delay, 180ms) both;
   }
   [data-motion-section].is-revealed [data-reveal="fast-copy"] {
-    animation: copy-unfold 500ms var(--reveal-ease) var(--reveal-delay, 180ms) both;
+    animation: copy-unfold 250ms var(--reveal-ease) var(--reveal-delay, 180ms) both;
   }
   [data-motion-section].is-revealed [data-reveal="media"] {
     animation: media-fade 300ms cubic-bezier(.22, .72, .24, 1) var(--reveal-delay, 0ms) both;
