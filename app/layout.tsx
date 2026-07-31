@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import { MotionObserver } from "@/components/MotionObserver";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://127.0.0.1:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "全域智能｜神经多模态数据服务",
   description: "面向大脑基座模型、科学研究与智能体交互，提供神经多模态数据采集、处理、标注与结构化交付服务。",
-  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "zh_CN",
@@ -32,6 +31,9 @@ const organizationJsonLd = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <link rel="icon" href="/favicon-omni.png" type="image/png" sizes="64x64" />
+      </head>
       <body>
         {children}
         <MotionObserver />

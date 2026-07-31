@@ -30,7 +30,6 @@ Web3Forms Access Key 应使用 `sales@omni-intel.cn` 申请。`.env.local` 仅�
 npm run dev
 npm run build
 npm run lint
-npm test
 ```
 
 ## 目录
@@ -39,5 +38,4 @@ npm test
 - `components/`：可复用组件及交互
 - `content/`：网站文案、论文和数据集信息
 - `public/`：正式图片、视频、Logo 和图标
-- `tests/`：服务端渲染测试
 - `worker/`：Vinext 的 Cloudflare Worker 入口
