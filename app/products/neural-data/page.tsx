@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ProductHeader } from "@/components/ProductHeader";
 import { SiteBottom } from "@/components/SiteBottom";
 import { ViewportVideo } from "@/components/ViewportVideo";
+import { CollectionDashboard } from "@/components/CollectionDashboard";
 import { serviceContent } from "@/content/serviceContent";
 
 const workflow = [
@@ -17,10 +18,14 @@ export default function NeuralDataProductPage() {
     <div className="product-page">
       <ProductHeader />
       <main>
+        <CollectionDashboard />
+
         <section className="product-hero">
-          <div className="container product-hero__inner">
+          <div className="container product-hero__inner product-hero__intro">
             <h1>神经多模态数据服务</h1>
-            <p>{serviceContent.lead}</p>
+            <div className="product-hero__description">
+              {serviceContent.lead.split("\n").map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
           </div>
         </section>
 

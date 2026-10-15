@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.public-landing{min-height:100vh;background:var(--bg)}
+.landing-header{display:flex;align-items:center;justify-content:space-between;background:var(--panel);border-bottom:1px solid var(--line)}
+.landing-brand{display:flex;align-items:center;flex-shrink:0}.landing-brand img{display:block;height:auto}
+.landing-actions{display:flex;align-items:center}.landing-login{padding:10px 19px;min-width:100px;display:flex;align-items:center;justify-content:center;gap:13px;font-size:12px}.landing-login .icon{width:16px;height:16px}
+.landing-main{margin:auto;display:flex;flex-direction:column}
+.landing-footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+.logout-button{font-size:10px;border:0;background:transparent;color:var(--muted);padding:5px 0}
+.login-code-row{display:flex;align-items:center;gap:10px}.login-code-row input{flex:1;min-width:0}.login-code-row button{margin-top:6px;font-size:11px}
+.login-help{font-size:11px;min-height:20px;margin:12px 0}.login-submit{width:100%;margin-top:9px;padding:12px}
+.demo-login-button{display:block;border:0;background:transparent;color:var(--accent);margin:12px auto 0;font-size:11px}
+.public-landing dialog{max-width:460px}.public-landing .dialog-top{margin-bottom:8px}.public-landing .dialog-top h2{font-size:23px}
+@media(max-width:620px){.landing-login{min-width:85px;padding:8px 12px;font-size:11px}.top-actions .logout-button{font-size:9px}.top-actions>.demo-label{display:none}}

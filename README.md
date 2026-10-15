@@ -1,41 +1,41 @@
 # omni-intel-data-product
 
-全域智能（Omni-Intelligence）的神经多模态数据产品官网，使用 Vinext / React 构建。网站无需登录或数据库，包含首页、产品中心、研究成果页和 Web3Forms 联系表单。
+全域智能（Omni-Intelligence）神经多模态数据产品官网，使用 Vinext / React 构建。正式站点为 https://daq.omni-intel.cn，由公网服务器上的 `omni-daq.service` 运行，内部端口 3100。
 
-## 本地运行
+## 本地开发
 
-需要 Node.js `>=22.13.0`。
+需要 Node.js >=22.13.0。安装依赖后执行 `npm run dev`。环境配置保留在本机或服务器，不提交 Git；原有 Web3Forms 联系表单配置保持原样。
 
-```bash
-npm install
-npm run dev
-```
+神经数据产品页 `/products/neural-data` 上部展示采集数据总览，原导航和联系我们入口保留。指标为累计采集 / 累计有效时长、今日采集 / 今日有效时长，单位统一为通道小时（29 通道）；质量通过率严格大于 90% 时显示绿色。趋势保留累计 / 每日切换和悬停标记。
 
-开发服务器默认运行在 `http://127.0.0.1:3000`。
+“了解更多”显示“系统升级中，敬请期待”。正式资源中不包含邮箱登录、验证码接口或四个管理 Tab 页面。
 
-## 环境变量
+本地展示数据可继续复用 `D:\Projects\kanban-demo` 的 4173 汇总服务；产品页开发服务使用 `npm run dev -- --port 4174`。原独立 demo 的三个风格和 CMD 启动文件保留在原目录。
 
-复制 `.env.example` 为 `.env.local`：
+`npm run sync:dashboard` 从原 demo 提取公开图表及样式，生成 `public/dashboard`。可通过 `OMNI_DEMO_DIR` 指定原目录。生成资源已提交，服务器构建无需访问该本地目录，也不应执行同步脚本。
 
-```env
-NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY=Web3Forms提供的AccessKey
-NEXT_PUBLIC_SITE_URL=https://你的正式域名
-```
+## 公网自动更新
 
-Web3Forms Access Key 应使用 `sales@omni-intel.cn` 申请。`.env.local` 仅用于本地，不应提交到远程仓库；部署时在托管平台配置同名环境变量。
+DAQ 公网服务器不能直连内网看板，因此由内网看板每分钟向 DAQ 的 HTTPS 接口推送一次签名汇总。数据仍采用现有看板 contract 7 的计算逻辑，通过只读事务查询现有数据库；不创建迁移，不调整人员系统或原看板服务。
 
-## 常用命令
+公网仅保存和输出时长、通过率、日期与趋势，不传输人员、邮箱、session 明细、数据库凭据或原系统令牌。浏览器每分钟刷新汇总，离开页面时停止轮询。数据超过三分钟未更新时保留原统计并提示更新失败，不伪造更新时间。
+
+两台服务器的完整部署及验证步骤见 [deploy/README.md](deploy/README.md)。公网运行不依赖任何本地电脑、4173 服务或人工验证码登录。
+
+## 检查
 
 ```bash
-npm run dev
-npm run build
-npm run lint
+pnpm test
+pnpm run lint
+pnpm run build
 ```
 
 ## 目录
 
-- `app/`：页面、布局和全局样式
-- `components/`：可复用组件及交互
-- `content/`：网站文案、论文和数据集信息
-- `public/`：正式图片、视频、Logo 和图标
-- `worker/`：Vinext 的 Cloudflare Worker 入口
+- `app/`、`components/`、`content/`：官网页面、交互及内容。
+- `public/dashboard/`：仅公开数据总览资源。
+- `server/`：汇总白名单、签名接收、内网只读汇总及推送脚本。
+- `deploy/`：独立的公网配置与内网定时器安装脚本。
+- `scripts/`：从原 demo 生成公开资源的本地工具。
+
+仅推送 Git 不代表已部署。正式上线以两端配置完成、首次同步成功和公网验证通过为准。
