@@ -49,6 +49,8 @@ bash deploy/install-publisher.sh /root/daq-publish.key 实际看板.service /绝
 
 现有看板必须运行、dist 必须为 contract 7、数据库必须使用验证证书的 PostgreSQL TLS 配置。该脚本不安装或修改原看板，不执行数据库迁移，不修改 Nginx 或重启人员 API。
 
+安装器会显式设置推送程序各级目录的访问权限，并以实际服务账号逐个检查脚本可读性与语法，检查通过后才安装服务单元。
+
 新增 `omni-daq-overview-publish.service` 为只运行一次的任务，`omni-daq-overview-publish.timer` 每次结束约 60 秒后再次运行，开机自动恢复。一次任务从数据库读取真实数据、过滤公开字段并向 `https://daq.omni-intel.cn/api/internal/overview` 推送。公网站点的 HTTPS 接口需可从内网访问；两端系统时钟应正常同步。
 
 ## 3. 验证后才算上线完成

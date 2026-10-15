@@ -21,9 +21,17 @@ release=/opt/omni-daq-overview/releases/$(date -u +%Y%m%dT%H%M%S)-$$
 for name in public-overview.mjs published-overview.mjs overview-service.mjs publish-overview.mjs; do
   [[ -f $source_root/server/$name ]] || { echo 'Incomplete publisher bundle.' >&2; exit 1; }
 done
-install -d -m 0755 "$release/server"
+# Existing parent directories may have been created with restrictive modes.
+# Normalize every directory owned by this publisher, without changing /opt.
+install -d -m 0755 -o root -g root \
+  /opt/omni-daq-overview /opt/omni-daq-overview/releases \
+  "$release" "$release/server"
 for name in public-overview.mjs published-overview.mjs overview-service.mjs publish-overview.mjs; do
-  install -m 0644 "$source_root/server/$name" "$release/server/$name"
+  install -m 0644 -o root -g root "$source_root/server/$name" "$release/server/$name"
+done
+# Validate access as the actual service user before installing or starting a unit.
+for name in public-overview.mjs published-overview.mjs overview-service.mjs publish-overview.mjs; do
+  runuser -u "$dashboard_user" -- "$node_bin" --check "$release/server/$name"
 done
 install -d -m 0750 -o root -g "$dashboard_group" /etc/omni-daq-overview
 if [[ $key_source != /etc/omni-daq-overview/publish.key ]]; then
