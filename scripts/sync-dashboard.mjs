@@ -42,4 +42,5 @@ for (const name of assets) fs.copyFileSync(path.join(source, 'assets', name), pa
 const runtime = fs.readFileSync(path.join(directory, 'templates/public-landing.js'), 'utf8');
 fs.writeFileSync(path.join(target, 'assets/landing.js'), runtime.replace('/* PUBLIC_CHART_HELPERS */', helpers.map(name => functions.get(name)).join('\n')));
 fs.copyFileSync(path.join(directory, 'templates/public-landing.html'), path.join(target, 'console.html'));
+fs.copyFileSync(path.join(directory, 'templates/public-landing.css'), path.join(target, 'assets/public-landing.css'));
 console.log('Public landing synchronized; no login or management pages.');

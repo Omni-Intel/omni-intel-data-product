@@ -1,0 +1,22 @@
+/* A local notice stays in normal page compositing and never captures scrolling. */
+body.embedded-landing .embedded-actions { position:relative; }
+.upgrade-notice {
+ position:absolute; top:50%; right:calc(100% + 12px); z-index:5;
+ transform:translateY(-50%);
+ display:flex; align-items:center; gap:14px;
+ width:max-content; max-width:calc(100vw - 32px);
+ padding:10px 12px; border:1px solid var(--line); border-radius:6px;
+ background:var(--panel); color:var(--ink); box-shadow:0 4px 14px #10243812;
+ font-size:13px; line-height:1.6;
+}
+.upgrade-notice[hidden] { display:none; }
+.upgrade-notice p { margin:0; }
+.upgrade-notice-close {
+ flex:none; width:20px; height:20px; padding:0; border:0;
+ border-radius:2px; background:transparent; color:var(--muted);
+ font-size:18px; line-height:20px;
+}
+.upgrade-notice-close:hover { color:var(--accent); }
+@media (max-width:620px) {
+ .upgrade-notice { top:100%; right:0; padding:8px 10px; transform:none; }
+}

@@ -4,8 +4,8 @@
  const embedded = true;
  const state = {trend:'cumulative'};
  const app = document.getElementById('app');
- const dialog = document.getElementById('detail');
  let data=null,loading=false,error='',countFrame=0,extraGap=0;
+ let noticeOpen=false,noticeTimer=0;
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const number=(value,decimals=0)=>value==null?'—':Number(value).toLocaleString('zh-CN',{minimumFractionDigits:decimals,maximumFractionDigits:2});
  const hours=seconds=>seconds==null?null:Number(seconds)/3600*29;
@@ -38,8 +38,19 @@ function hidePoint(event){const point=event.target.closest('[data-chart-info]');
 function animateNumbers(){cancelAnimationFrame(countFrame);const panel=document.querySelector('.live-statistics');if(!panel||matchMedia('(prefers-reduced-motion: reduce)').matches||document.hidden)return;const nodes=[...panel.querySelectorAll('[data-count-to]')];panel.dataset.countState='running';const start=performance.now();const step=now=>{if(!panel.isConnected)return;const p=Math.min(1,(now-start)/1100);for(const node of nodes)node.textContent=number(Number(node.dataset.countTo)*(1-(1-p)**3),Number(node.dataset.countDecimals)||0);if(p<1)countFrame=requestAnimationFrame(step);else panel.dataset.countState='complete';};countFrame=requestAnimationFrame(step);}
 
  function publishHeight(){const gap=matchMedia('(min-width:1001px)').matches?extraGap:0;window.parent.postMessage({type:'omni-dashboard-resize',height:app.getBoundingClientRect().height-gap},location.origin);}
+ function syncNotice(){
+  const notice=document.getElementById('upgrade-notice');
+  const trigger=app.querySelector('[data-action="more"]');
+  if(notice)notice.hidden=!noticeOpen;
+  trigger?.setAttribute('aria-expanded',String(noticeOpen));
+ }
+ function setNotice(open){
+  clearTimeout(noticeTimer);noticeOpen=open;syncNotice();
+  if(open)noticeTimer=setTimeout(()=>setNotice(false),5000);
+ }
  function render(){
-  app.innerHTML=`<main class="landing-main live-main"><div class="live-heading embedded-heading"><h1>采集数据总览</h1><div class="embedded-actions"><button class="dashboard-more" data-action="more">了解更多 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></div></div>${error?`<div class="live-message" role="status">${escape(error)}</div>`:''}${data?overview(data):'<section class="live-empty"><span>正在读取采集数据…</span></section>'}</main>`;
+  app.innerHTML=`<main class="landing-main live-main"><div class="live-heading embedded-heading"><h1>采集数据总览</h1><div class="embedded-actions"><button class="dashboard-more" data-action="more" aria-controls="upgrade-notice" aria-expanded="false">了解更多 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button><div class="upgrade-notice" id="upgrade-notice" role="status" hidden><p>系统升级中，敬请期待</p><button class="upgrade-notice-close" data-action="dismiss-notice" aria-label="关闭提示">×</button></div></div></div>${error?`<div class="live-message" role="status">${escape(error)}</div>`:''}${data?overview(data):'<section class="live-empty"><span>正在读取采集数据…</span></section>'}</main>`;
+  syncNotice();
  }
  async function load(animate=false){
   if(loading)return;
@@ -56,10 +67,12 @@ function animateNumbers(){cancelAnimationFrame(countFrame);const panel=document.
  document.addEventListener('click',event=>{
   const button=event.target.closest('button');if(!button)return;
   if(button.dataset.trend){state.trend=button.dataset.trend;render();}
-  if(button.dataset.action==='more')dialog.showModal();
-  if(button.classList.contains('close-dialog'))dialog.close();
+  if(button.dataset.action==='more')setNotice(!noticeOpen);
+  if(button.dataset.action==='dismiss-notice')setNotice(false);
  });
- dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+ document.addEventListener('pointerdown',event=>{if(noticeOpen&&!event.target.closest('.embedded-actions'))setNotice(false);});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&noticeOpen)setNotice(false);});
+ window.addEventListener('blur',()=>{if(noticeOpen)setNotice(false);});
  document.addEventListener('pointerover',showPoint);
  document.addEventListener('focusin',showPoint);
  document.addEventListener('pointerout',hidePoint);
@@ -74,7 +87,7 @@ function animateNumbers(){cancelAnimationFrame(countFrame);const panel=document.
   }
  });
  new ResizeObserver(publishHeight).observe(app);
- const refresh=()=>{if(!document.hidden&&!dialog.open)void load();};
+ const refresh=()=>{if(!document.hidden)void load();};
  document.addEventListener('visibilitychange',refresh);
  setInterval(refresh,60000);
  render();void load(true);

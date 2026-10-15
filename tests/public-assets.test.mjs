@@ -12,8 +12,8 @@ test('published dashboard contains only the public overview and upgrade notice',
     }
     return result;
   }
-  assert.deepEqual((await files(root)).sort(),['assets/app.css','assets/landing.css','assets/landing.js','assets/live.css','assets/variants.css','console.html'].sort());
+  assert.deepEqual((await files(root)).sort(),['assets/app.css','assets/landing.css','assets/landing.js','assets/live.css','assets/public-landing.css','assets/variants.css','console.html'].sort());
   const html=await readFile(new URL('console.html',root),'utf8'),js=await readFile(new URL('assets/landing.js',root),'utf8');
-  assert.ok(html.includes('系统升级中，敬请期待'));
+  assert.ok(js.includes('系统升级中，敬请期待'));
   assert.doesNotMatch(html+js,/workspace\.html|\/api\/auth|\/v1\/display|EMAIL_MOCK_CODE|123456|localStorage|sessionStorage/);
 });
