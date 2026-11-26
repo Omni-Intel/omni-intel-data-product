@@ -18,6 +18,10 @@ function visit(node) {
 visit(tree);
 for (const name of helpers) if (!functions.has(name)) throw new Error(`Public chart helper missing: ${name}`);
 for (const name of assets) if (!fs.existsSync(path.join(source, 'assets', name))) throw new Error(`Public stylesheet missing: ${name}`);
+// Match the main dashboard's headline rate and its latest-date fallback.
+functions.set('overview', functions.get('overview')
+  .replaceAll('passRing(t.passRate)', 'passRing(t.usableRate)')
+  .replace('今日采集时长 / 今日有效时长', '当日采集时长 / 当日有效时长'));
 
 // Archive the full demo once, then publish only the public landing assets.
 if (fs.existsSync(path.join(target, 'workspace.html')) || fs.existsSync(path.join(target, 'assets/app.js'))) {

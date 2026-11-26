@@ -54,7 +54,7 @@ Environment=OMNI_DASHBOARD_DIR=$dashboard_dir
 Environment=OMNI_OVERVIEW_KEY_FILE=/etc/omni-daq-overview/publish.key
 Environment=OMNI_OVERVIEW_PUBLISH_URL=https://daq.omni-intel.cn/api/internal/overview
 ExecStart=$node_bin $release/server/publish-overview.mjs
-TimeoutStartSec=45
+TimeoutStartSec=75
 UMask=0077
 NoNewPrivileges=true
 PrivateTmp=true

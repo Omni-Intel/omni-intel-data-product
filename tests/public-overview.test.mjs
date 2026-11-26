@@ -8,7 +8,9 @@ test('public boundary removes identities and records, preserves zero and unknown
   const value=publicOverview(fixture());
   assert.equal(value.totals.todayDuration.value,0);assert.equal(value.totals.todayUsable.value,null);
   assert.equal(JSON.stringify(value).includes('private'),false);
-  assert.deepEqual(Object.keys(value.totals).sort(),['cumulativeDuration','cumulativeUsable','passRate','todayDuration','todayUsable'].sort());
+  assert.deepEqual(Object.keys(value.totals).sort(),['cumulativeDuration','cumulativeUsable','passRate','todayDuration','todayUsable','usableRate'].sort());
+  assert.equal(value.totals.usableRate,null);
+  assert.equal(publicOverview({...fixture(),totals:{...fixture().totals,usableRate:83.3}}).totals.usableRate,83.3);
   assert.throws(()=>publicOverview({...fixture(),totals:{...fixture().totals,passRate:101}}));
 });
 test('refreshes live data after TTL, coalesces loads, and never invents a fresh timestamp on failure',async()=>{

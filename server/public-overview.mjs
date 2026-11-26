@@ -24,6 +24,7 @@ export function publicOverview(input) {
       cumulativeDuration:metric('cumulativeDuration'),cumulativeUsable:metric('cumulativeUsable'),
       todayDuration:metric('todayDuration'),todayUsable:metric('todayUsable'),
       passRate:value(input.totals?.passRate,100),
+      usableRate:value(input.totals?.usableRate??null),
     },
     trend:trend(input.trend),cumulativeTrend:trend(input.cumulativeTrend),
     sourceRefreshFailed:input.sourceRefreshFailed === true,

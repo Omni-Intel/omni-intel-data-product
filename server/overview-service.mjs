@@ -20,10 +20,13 @@ export function createOverviewServer(read) {
 export async function canonicalReader(directory) {
   if (!directory || !path.isAbsolute(directory)) throw new Error('OMNI_DASHBOARD_DIR must name the installed dashboard directory');
   const moduleUrl=name=>pathToFileURL(path.join(directory,'dist',name)).href;
-  const [{loadConfig},{createDatabase},{DisplayDashboardService,summarizeSessionRecords,DASHBOARD_DATA_CONTRACT_VERSION}]=await Promise.all([
+  const [{loadConfig},{createDatabase},dashboard]=await Promise.all([
     import(moduleUrl('config.js')),import(moduleUrl('db/pool.js')),import(moduleUrl('display/dashboard.js')),
   ]);
-  if (DASHBOARD_DATA_CONTRACT_VERSION!==7) throw new Error('Dashboard data contract must be version 7');
+  const {DisplayDashboardService,summarizeSessionRecords,DASHBOARD_DATA_CONTRACT_VERSION,DASHBOARD_QC_PROJECTION_SQL}=dashboard;
+  if (DASHBOARD_DATA_CONTRACT_VERSION!==7 || !DASHBOARD_QC_PROJECTION_SQL) {
+    throw Object.assign(new Error('Dashboard contract 7 with compact QC projection is required'),{code:'DASHBOARD_UNSUPPORTED'});
+  }
   const config=loadConfig();
   if (config.database.engine!=='postgres' || config.database.ssl?.rejectUnauthorized!==true) throw new Error('Use the existing verified TLS PostgreSQL configuration');
   const db=createDatabase(config.database);
@@ -33,14 +36,17 @@ export async function canonicalReader(directory) {
       const client=await db.connect();
       try {
         await client.query('BEGIN READ ONLY');
-        await client.query("SET LOCAL statement_timeout = '8000ms'");
+        // Full-history reads can exceed eight seconds as the archive grows.
+        // Keep a bounded query budget within the publisher's 75-second deadline.
+        await client.query("SET LOCAL statement_timeout = '30000ms'");
         const service=new DisplayDashboardService({query:(...args)=>client.query(...args)});
         const snapshot=await service.readSnapshot();
-        const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+        const now=new Date(snapshot.updatedAt);
+        const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
         const query={date:today,participant:'',paradigm:'',status:'all',page:1};
-        const first=summarizeSessionRecords(snapshot.records,query,new Date(snapshot.updatedAt));
-        const date=first.availableDates.includes(today)?today:first.availableDates.at(-1)||today;
-        const result=date===today?first:summarizeSessionRecords(snapshot.records,{...query,date},new Date(snapshot.updatedAt));
+        const first=summarizeSessionRecords(snapshot.records,query,now);
+        const date=first.availableDates.includes(today)?today:first.availableDates.at(-1)??today;
+        const result=date===today?first:summarizeSessionRecords(snapshot.records,{...query,date},now);
         return publicOverview({...result,updatedAt:snapshot.updatedAt});
       } finally {
         await client.query('ROLLBACK').catch(()=>{});

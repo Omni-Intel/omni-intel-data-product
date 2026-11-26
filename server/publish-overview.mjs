@@ -25,8 +25,11 @@ if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.
     const url=process.env.OMNI_OVERVIEW_PUBLISH_URL;
     const result=await publishOnce(source,{url,key});
     console.log(`Aggregate synchronized: ${result.updatedAt}`);
-  } catch {
-    console.error('Aggregate sync failed. Check HTTPS access, signing key, clock and the existing dashboard database environment.');
+  } catch (error) {
+    // SQLSTATE/network codes identify failures without logging credentials or rows.
+    const code=String(error?.code||error?.cause?.code||'UNKNOWN');
+    const safeCode=/^[A-Z0-9_]{1,40}$/.test(code)?code:'UNKNOWN';
+    console.error(`Aggregate sync failed (code=${safeCode}). Check HTTPS access, signing key, clock and the existing dashboard database environment.`);
     process.exitCode=1;
   } finally {await source?.close();}
 }

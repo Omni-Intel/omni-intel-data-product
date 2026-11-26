@@ -7,7 +7,7 @@ import {acceptPublishedOverview,readPublishedOverview,signature} from '../server
 import {publishOnce} from '../server/publish-overview.mjs';
 
 const now=Date.parse('2026-10-15T04:00:00Z'),key=Buffer.alloc(32,9);
-const fixture=()=>({selectedDate:'2026-10-15',updatedAt:new Date(now).toISOString(),availableDates:['2026-10-15'],totals:{cumulativeDuration:{value:3600},cumulativeUsable:{value:3000},todayDuration:{value:3600},todayUsable:{value:3000},passRate:97},trend:[],cumulativeTrend:[],records:[{email:'private@example.com'}]});
+const fixture=()=>({selectedDate:'2026-10-15',updatedAt:new Date(now).toISOString(),availableDates:['2026-10-15'],totals:{cumulativeDuration:{value:3600},cumulativeUsable:{value:3000},todayDuration:{value:3600},todayUsable:{value:3000},passRate:97,usableRate:100*3000/3600},trend:[],cumulativeTrend:[],records:[{email:'private@example.com'}]});
 const request=(data,{timestamp=String(now),secret=key}={})=>{
   const body=JSON.stringify(data);
   return new Request('https://daq.example/api/internal/overview',{method:'POST',body,headers:{'X-Omni-Timestamp':timestamp,'X-Omni-Signature':signature(secret,timestamp,body)}});
@@ -25,6 +25,7 @@ test('signed publication persists only public aggregates; tampering and expired 
   const duplicate=await acceptPublishedOverview(request(older),options);assert.equal((await duplicate.json()).changed,false);
   assert.equal(await readFile(filename,'utf8'),saved);
   const stale=await readPublishedOverview({filename,now:now+180001});
+  assert.equal(stale.totals.usableRate,fixture().totals.usableRate);
   assert.equal(stale.sourceRefreshFailed,true);assert.equal(stale.updatedAt,fixture().updatedAt);
 });
 
